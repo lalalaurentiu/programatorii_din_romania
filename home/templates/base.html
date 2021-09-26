@@ -1,0 +1,109 @@
+{% load static %}
+{% load bootstrap5 %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="{% static 'base.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% block head %} {% endblock %}
+    <title>Document</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a href="{% url 'home:home' %}" style="color: black;"><small class="p-2">Programatorii din romania</small></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-5">
+          {% if user.is_authenticated %}
+            {% if user.is_superuser %}
+              <button id="botton-slide-in-blurred-tr" class="btn btn-outline-secondary ms-2" >Addaugare task</button>
+            {% endif %}
+            <a class="btn btn-outline-secondary ms-2" aria-current="page" href="{% url 'accounts:logout' %}">Logout</a>  
+            <a class="btn btn-outline-secondary ms-2" aria-current="page" href="{% url 'accounts:profile' %}">Profil</a>
+            <button id="uploadbotton-slide-in-blurred-tr" class="btn btn-outline-secondary ms-2" >Incarca proiect</button>     
+          {% else %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle ms-3" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Autentificare
+              </a>
+              <ul class="dropdown-menu text-center" aria-labelledby="navbarDropdown">
+                <li><button id="registerBotton" class="ui-state-default ui-corner-all btn btn-outline-secondary mb-2">Creaza cont</button></li>
+                <li><button id="loginBotton" class="ui-state-default ui-corner-all btn btn-outline-secondary">Logheaza-te</button></li>
+              </ul> 
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div id="registerToggler" class="toggler card container text-center" >
+    <div id="registerEffect" class="ui-widget-content ui-corner-all card-body " >
+        <div class="container">
+            <form  method="post">
+                {% csrf_token %}
+                {% bootstrap_form signUpForm %}
+                {% buttons %}
+                  <input type="submit" class="btn btn-outline-secondary" value="Inregistrare" name="signUpForm">
+                {% endbuttons %}
+            </form>
+        </div>
+    </div>
+  </div>
+
+  <div id="loginToggler" class="toggler card container text-center" >
+    <div id="loginEffect" class="ui-widget-content ui-corner-all card-body " >
+        <div class="container">
+          <form  method="post" action="">
+            {% csrf_token %}
+            {% bootstrap_form loginForm %}
+            {% buttons %}
+              <input type="submit" class="btn btn-outline-secondary" value="Login" name="signUpForm">
+            {% endbuttons %}
+          </form>
+        </div>
+    </div>
+  </div>
+
+  <div class="container">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          <h1>{{ message }}</h1>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  
+  {% block content %} {% endblock %}
+  {% block footer%} {% endblock %}
+    
+  <footer class="py-3 my-4 footer-basic mt-auto">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="https://discord.gg/t7MVtEwX" class="nav-link px-2 text-muted">Alatura-te pe discord</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+    </ul>
+    <p class="text-center text-muted">© 2021 Company, Inc</p>
+  </footer>
+
+</body>
+</html>
+
+
+

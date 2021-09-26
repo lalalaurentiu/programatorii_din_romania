@@ -1,0 +1,106 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block head%} 
+  <script src="{% static 'home.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'home.css' %}">
+{% endblock %}
+{% block content %}
+  {% if user.is_superuser%}
+    <div id="slide-in-blurred-tr" class="invisible container" style="display: none;">
+      <div class="card text-center">
+        <div class="card-header">
+          Creaza un nou task
+        </div>
+        <div class="card-body">
+          <form method="post" action="{% url 'home:task' %}">
+            {% csrf_token %}
+            <div class="d-block p-2"> 
+              {% bootstrap_form taskform %}
+            </div>
+            <div class="card-footer text-muted">
+              {% buttons %}
+                <input class="btn btn-outline-secondary ms-2" type="submit" value="Save" name="adminform">
+              {% endbuttons %}
+            </div> 
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div id="upload-slide-in-blurred-tr" class="invisible container" style="display: none;" >
+    <div class="card text-center">
+      <div class="card-header">
+        Creaza un nou task
+      </div>
+      <div class="card-body">
+        <form method="POST" action="{% url 'home:save' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% bootstrap_form uploadfileform %}
+          {% buttons %}
+            <p><input class="btn btn-outline-secondary ms-2" type = "submit" value="Incarca" name="uploadfiles"></p>
+          {% endbuttons %}
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="card container ">
+    {% if task %}
+        <div class="card-header">
+          Taskuri disponibile
+        </div>
+        <div class="card-body">
+          {% for t in task %}
+            <div class="containe border-bottom mb-2">
+              <h5 class="card-title">{{ t.task }}</h5>
+            <p class="card-text">{{ t.sescription }}</p>
+              <form method="POST" action="{% url 'accounts:chosentask' %}">
+                {% csrf_token %}
+                {% if user.is_authenticated %}
+                  <p><input type = "hidden" value="{{ t.id }}" name="task"></p>
+                  <p><input class="btn btn-outline-secondary ms-2" type = "submit" value="Alege Task" ></p>
+                {% else %}
+                  <small>pentru a alege un task va rog sa va logati</small>
+                {% endif %}
+              </form>
+
+            </div>
+          {% endfor %}
+        </div>
+    {% else %}
+      <small>Nu mai sunt taskuri disponibile dar puteti incarca orice proiect pe site</small>
+    {% endif %}
+  </div> 
+  
+    
+  <div class="container">
+      {% for project in userpost %}
+      <div class="card text-center">
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="true" href="#">Active</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Special title treatment</h5>
+        <iframe src="{{ project.get_absolute_url }}" height="30%" width="100%"></iframe>
+        <a href="{{ project.get_absolute_url }}" class="btn btn-primary">Vezi pagina</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+    
+{% endblock %}
+{% block footer%} {% endblock %}

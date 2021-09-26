@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load bootstrap5 %}
+
+{% block head %}
+    {{ block.super }}
+    <script src="{% static 'home.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+{% if user.is_superuser%}
+    <div id="slide-in-blurred-tr" class="invisible container" style="display: none;">
+        <div class="card text-center">
+            <div class="card-header">
+            Creaza un nou task
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'home:task' %}">
+                    {% csrf_token %}
+                    <div class="d-block p-2"> 
+                        {% bootstrap_form taskform %}
+                    </div>
+                    <div class="card-footer text-muted">
+                        {% buttons %}
+                            <input class="btn btn-outline-secondary ms-2" type="submit" value="Save" name="adminform">
+                        {% endbuttons %}
+                    </div> 
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<div id="upload-slide-in-blurred-tr" class="invisible container" style="display: none;" >
+    <div class="card text-center">
+        <div class="card-header">
+            Creaza un nou task
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{% url 'home:save' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% bootstrap_form uploadfileform %}
+                {% buttons %}
+                    <p><input class="btn btn-outline-secondary ms-2" type = "submit" value="Incarca" name="uploadfiles"></p>
+                {% endbuttons %}
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <h1>Bun venit {{ user.username }}</h1>
+    {% if userProfile%}
+        <h3>Taskurile tale</h3>
+        <div class="container">
+            <div class="row justify-content-evenly">
+                {% for task in userProfile %}
+                    <div class="col-4">
+                        <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
+                            <div class="card-header">{{ task.tasksName }}</div>
+                            <div class="card-body">
+                                <p class="card-text">{{ task.taskDescription }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <small>Nu a-ti ales nici un task</small><br>
+    {% endif %}
+    
+    {% if projects %}
+        <div class="container">
+            <h1>Proiecte incarcate</h1>
+            {% for project in projects %}
+            <div class="card text-center" style="height: 50vh;">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <form action="{% url 'accounts:deleteproject'  project.id  %}" method="POST">
+                                    {% csrf_token %}
+                                    <input class="btn btn-default btn-danger" type="submit" value="DELETE" name="{{ project.id }}"/>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ project.get_absolute_url }}">Vezi pagina</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <iframe src="{{ project.get_absolute_url }}" height="100%" width="100%"></iframe>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <small>Nu aveti nici un proiect incarcat</small>
+    {% endif%}
+</div>
+
+{% endblock %}

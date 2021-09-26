@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block head %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form  method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form loginForm %}
+        {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            Submit
+        </button>
+        {% endbuttons %}
+    </form>
+</div>
+{% endblock %}

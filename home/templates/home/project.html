@@ -1,0 +1,16 @@
+{% load static %}
+{% for project in projects %}
+    {% block head%} 
+        <style>
+            {% autoescape off %}{{ project.post_css }}{% endautoescape %}
+        </style>
+    {% endblock %}
+    {% block content %} 
+        {% autoescape off %}{{ project.post_html }}{% endautoescape %} 
+    {% endblock %}
+    {% block footer%}
+    <script>
+        {% autoescape off %}{{ project.post_js }}{% endautoescape %} 
+    </script>
+    {% endblock %}
+{% endfor %}
