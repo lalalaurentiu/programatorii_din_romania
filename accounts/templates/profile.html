@@ -71,20 +71,20 @@
     {% endif %}
     
     {% if projects %}
-        <div class="container">
+        <div class="container ms-2">
             <h1>Proiecte incarcate</h1>
             {% for project in projects %}
             <div class="card text-center" style="height: 50vh;">
                 <div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs">
-                        <li class="nav-item">
+                        <li class="nav-item ms-2">
+                            <a class="btn btn-outline-primary ms-2" href="{{ project.get_absolute_url }}">Vezi pagina</a>
+                        </li>
+                        <li class="nav-item ms-2">
                             <form action="{% url 'accounts:deleteproject'  project.id  %}" method="POST">
                                     {% csrf_token %}
-                                    <input class="btn btn-default btn-danger" type="submit" value="DELETE" name="{{ project.id }}"/>
+                                    <input class="btn btn-outline-danger" type="submit" value="Sterge" name="{{ project.id }}"/>
                             </form>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ project.get_absolute_url }}">Vezi pagina</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>

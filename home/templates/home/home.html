@@ -48,57 +48,57 @@
     </div>
   </div>
 
-  <div class="card container ">
-    {% if task %}
-        <div class="card-header">
-          Taskuri disponibile
-        </div>
-        <div class="card-body">
-          {% for t in task %}
-            <div class="containe border-bottom mb-2">
-              <h5 class="card-title">{{ t.task }}</h5>
-            <p class="card-text">{{ t.sescription }}</p>
-              <form method="POST" action="{% url 'accounts:chosentask' %}">
-                {% csrf_token %}
-                {% if user.is_authenticated %}
-                  <p><input type = "hidden" value="{{ t.id }}" name="task"></p>
-                  <p><input class="btn btn-outline-secondary ms-2" type = "submit" value="Alege Task" ></p>
-                {% else %}
-                  <small>pentru a alege un task va rog sa va logati</small>
-                {% endif %}
-              </form>
+  <div class="container">
+    <div class="card">
+      {% if task %}
+          <div class="card-header">
+            Taskuri disponibile
+          </div>
+          <div class="card-body">
+            {% for t in task %}
+              <div class="containe border-bottom">
+                <h5 class="card-title">{{ t.task }}</h5>
+              <p class="card-text">{{ t.sescription }}</p>
+                <form method="POST" action="{% url 'accounts:chosentask' %}">
+                  {% csrf_token %}
+                  {% if user.is_authenticated %}
+                    <p><input type = "hidden" value="{{ t.id }}" name="task"></p>
+                    <p><input class="btn btn-outline-secondary ms-2" type = "submit" value="Alege Task" ></p>
+                  {% else %}
+                    <small>pentru a alege un task va rog sa va logati</small>
+                  {% endif %}
+                </form>
 
-            </div>
-          {% endfor %}
-        </div>
-    {% else %}
-      <small>Nu mai sunt taskuri disponibile dar puteti incarca orice proiect pe site</small>
-    {% endif %}
-  </div> 
+              </div>
+            {% endfor %}
+          </div>
+      {% else %}
+        <small>Nu mai sunt taskuri disponibile dar puteti incarca orice proiect pe site</small>
+      {% endif %}
+    </div> 
+  </div>
+  
   
     
-  <div class="container">
-      {% for project in userpost %}
-      <div class="card text-center">
-      <div class="card-header">
-        <ul class="nav nav-tabs card-header-tabs">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="true" href="#">Active</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-          </li>
-        </ul>
+  <div class="container my-2">
+    <h1>Proiecte incarcate</h1>
+    {% for project in userpost %}
+      <div class="card text-center" style="height: 50vh;">
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs ms-2">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="true" >Activ</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-outline-primary ms-2" href="{{ project.get_absolute_url }}">Vezi Pagina</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body" style="height: 100vh;">
+          <h5 class="card-title">Proiect incarcat de {{ project.author }}</h5>
+          <iframe src="{{ project.get_absolute_url }}" height="80%" width="100%"></iframe>
+        </div>
       </div>
-      <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
-        <iframe src="{{ project.get_absolute_url }}" height="30%" width="100%"></iframe>
-        <a href="{{ project.get_absolute_url }}" class="btn btn-primary">Vezi pagina</a>
-      </div>
-    </div>
     {% endfor %}
   </div>
     
