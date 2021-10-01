@@ -38,13 +38,10 @@ def saveProjects(request):
         request_html_file = request.FILES['fileHtml'] if 'fileHtml' in request.FILES else None
         request_css_file = request.FILES['fileCss'] if 'fileCss' in request.FILES else None
         request_Js_file = request.FILES['fileJs'] if 'fileJs' in request.FILES else None
-        print(request_css_file)
-
 
         dataHtml = verifyFile(request_html_file, ".html$")
         datCss = verifyFile(request_css_file, ".css$")
         dataJs = verifyFile(request_Js_file, ".js$")
-
 
         title = request.POST.get("slug")
         UserPost.objects.create(post_html = dataHtml, post_css = datCss, post_js =dataJs, slug=title, author_id = request.user.id)

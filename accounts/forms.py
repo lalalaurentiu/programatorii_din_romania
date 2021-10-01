@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from django.db.models import fields
+from home.models import UserPost
 
 
 class SignUpForm(forms.ModelForm):
@@ -26,6 +28,11 @@ class SignUpForm(forms.ModelForm):
 class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=100, required=True, label="Nume")
     password = forms.CharField(widget = forms.PasswordInput(), label="Parola")
+
+class ProjectStatus(forms.ModelForm):
+    class Meta:
+        model = UserPost
+        fields = ["status"]
 
     
 

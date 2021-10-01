@@ -57,9 +57,15 @@
                 {% for task in userProfile %}
                     <div class="col-4">
                         <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
-                            <div class="card-header">{{ task.tasksName }}</div>
+                            <div class="card-header">
+                                {{ task.tasksName }}
+                            </div>
                             <div class="card-body">
                                 <p class="card-text">{{ task.taskDescription }}</p>
+                                <form action="{% url 'accounts:deletetask'  task.id  %}" method="POST">
+                                    {% csrf_token %}
+                                    <input class="btn btn-outline-danger" type="submit" value="Sterge" name="{{ task.id }}"/>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -87,7 +93,7 @@
                             </form>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ project.status }}</a>
                         </li>
                     </ul>
                 </div>
@@ -102,5 +108,30 @@
         <small>Nu aveti nici un proiect incarcat</small>
     {% endif%}
 </div>
-
+    {% if user.is_superuser %}
+        {% if availableProjects %}
+            <div class="container my-2 border text-center">
+                <h1>Proiecte incarcate de utilizatori</h1>
+                <div class="row justify-content-evenly my-2">
+                    {% for projects in availableProjects %}
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Proiect incarcat de {{ projects.author }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ projects.status }}</h6>
+                            <form method="POST" action="{% url 'accounts:projectstatus' projects.id %}" >
+                                {% csrf_token %}
+                                {% bootstrap_form projectStatusForm %}
+                                {% buttons %}
+                                    <p><input type = "hidden" value="{{ projects.id }}" id="id_project"></p>
+                                    <p><input class="btn btn-outline-secondary ms-2" type = "submit" value="Actualizeaza"></p>
+                                {% endbuttons %}
+                            </form>
+                            <a href="{{ projects.get_absolute_url }}" class="card-link">Vezi Proiectul</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}   
 {% endblock %}

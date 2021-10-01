@@ -13,12 +13,23 @@ class Tasks(models.Model):
     available = models.BooleanField(default=True)
 
 class UserPost(models.Model):
+
+    activ = "Activ"
+    dezactivat = "Dezactivat"
+    inAsteptare = "In asteptare"
+
+    choicesStatus = [
+        (activ, "Activ"),
+        (dezactivat, "Dezactivat"),
+        (inAsteptare, "In asteptare")
+    ]
+
     author = models.ForeignKey(User, on_delete=CASCADE)
     title = models.CharField(blank=True, max_length=250)
     post_html = models.TextField(blank=True)
     post_css = models.TextField(blank=True)
     post_js = models .TextField(blank=True)
-    
+    status = models.CharField(max_length=15, choices=choicesStatus, default=inAsteptare)
     slug = models.SlugField(max_length=250, unique=True)
 
     def __str__(self):
